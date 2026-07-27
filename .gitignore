@@ -1,1 +1,12 @@
-tmp/
+AgentLogs/
+Adguard-Home-For-Magisk-Mod/
+.tools/
+.venv/
+dist/
+work/
+*.mrs
+*.pyc
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.basedpyright/
