@@ -187,7 +187,7 @@ def write_outputs(result: ConversionResult, output_dir: Path) -> None:
 
 def write_manifest(result: ConversionResult, path: Path) -> None:
     lines = [
-        "# AdRulesUltra multi-format rulesets",
+        "# HyperADRules multi-format rulesets",
         "",
         "## 上游",
         "",

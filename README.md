@@ -1,189 +1,218 @@
-# AdRulesUltra
+<div align="center">
+  <img src="pics/logo.png" alt="HyperADRules" width="280" />
+  <h1>HyperADRules</h1>
+  <p><strong>下一代广告 / 恶意域名规则聚合</strong><br/>
+  多上游合并 · 保守 DNS 语义 · 多客户端一键订阅</p>
 
-[![Build and release AdRulesUltra rulesets](https://github.com/Lynricsy/AdRulesUltra/actions/workflows/build-release.yml/badge.svg)](https://github.com/Lynricsy/AdRulesUltra/actions/workflows/build-release.yml)
-[![Latest release](https://img.shields.io/github/v/release/Lynricsy/AdRulesUltra?label=release&sort=semver&color=7c3aed)](https://github.com/Lynricsy/AdRulesUltra/releases/latest)
-[![Release downloads](https://img.shields.io/github/downloads/Lynricsy/AdRulesUltra/total?label=downloads&color=0891b2)](https://github.com/Lynricsy/AdRulesUltra/releases)
-![Ads domains](https://img.shields.io/badge/dynamic/json?label=ads%20domains&query=%24.badges.ads_domains&url=https%3A%2F%2Fgithub.com%2FLynricsy%2FAdRulesUltra%2Freleases%2Flatest%2Fdownload%2Fstats.json&color=dc2626)
-![Allow domains](https://img.shields.io/badge/dynamic/json?label=allow%20domains&query=%24.badges.allow_domains&url=https%3A%2F%2Fgithub.com%2FLynricsy%2FAdRulesUltra%2Freleases%2Flatest%2Fdownload%2Fstats.json&color=16a34a)
-![Malware domains](https://img.shields.io/badge/dynamic/json?label=malware%20domains&query=%24.badges.malware_domains&url=https%3A%2F%2Fgithub.com%2FLynricsy%2FAdRulesUltra%2Freleases%2Flatest%2Fdownload%2Fstats.json&color=f97316)
-![Total rules](https://img.shields.io/badge/dynamic/json?label=total%20rules&query=%24.badges.total_rules&url=https%3A%2F%2Fgithub.com%2FLynricsy%2FAdRulesUltra%2Freleases%2Flatest%2Fdownload%2Fstats.json&color=2563eb)
-![MRS size](https://img.shields.io/badge/dynamic/json?label=main%20MRS&query=%24.badges.ads_mrs_size&url=https%3A%2F%2Fgithub.com%2FLynricsy%2FAdRulesUltra%2Freleases%2Flatest%2Fdownload%2Fstats.json&color=9333ea)
+  <p>
+    <a href="https://github.com/Lynricsy/HyperADRules/actions/workflows/build-release.yml">
+      <img src="https://github.com/Lynricsy/HyperADRules/actions/workflows/build-release.yml/badge.svg" alt="build" />
+    </a>
+    <a href="https://github.com/Lynricsy/HyperADRules/releases/latest">
+      <img src="https://img.shields.io/github/v/release/Lynricsy/HyperADRules?label=release&color=7c3aed" alt="release" />
+    </a>
+    <a href="https://github.com/Lynricsy/HyperADRules/stargazers">
+      <img src="https://img.shields.io/github/stars/Lynricsy/HyperADRules?style=flat&color=f59e0b" alt="stars" />
+    </a>
+    <a href="https://github.com/Lynricsy/HyperADRules/releases">
+      <img src="https://img.shields.io/github/downloads/Lynricsy/HyperADRules/total?label=downloads&color=0891b2" alt="downloads" />
+    </a>
+  </p>
 
-AdRulesUltra 是一个独立的广告与恶意域名规则聚合项目。它定时拉取多个上游 DNS 规则源，合并、去重并转换为多种客户端可直接使用的规则集，包括 mihomo `.mrs`、sing-box `.srs`、Clash YAML、dnsmasq、SmartDNS、Surge 与 AdGuard 文本。
+  <p>
+    <img src="https://img.shields.io/badge/dynamic/json?label=ads&query=%24.badges.ads_domains&url=https%3A%2F%2Fgithub.com%2FLynricsy%2FHyperADRules%2Freleases%2Flatest%2Fdownload%2Fstats.json&color=dc2626" alt="ads" />
+    <img src="https://img.shields.io/badge/dynamic/json?label=allow&query=%24.badges.allow_domains&url=https%3A%2F%2Fgithub.com%2FLynricsy%2FHyperADRules%2Freleases%2Flatest%2Fdownload%2Fstats.json&color=16a34a" alt="allow" />
+    <img src="https://img.shields.io/badge/dynamic/json?label=malware&query=%24.badges.malware_domains&url=https%3A%2F%2Fgithub.com%2FLynricsy%2FHyperADRules%2Freleases%2Flatest%2Fdownload%2Fstats.json&color=f97316" alt="malware" />
+    <img src="https://img.shields.io/badge/dynamic/json?label=total&query=%24.badges.total_rules&url=https%3A%2F%2Fgithub.com%2FLynricsy%2FHyperADRules%2Freleases%2Flatest%2Fdownload%2Fstats.json&color=2563eb" alt="total" />
+    <img src="https://img.shields.io/badge/dynamic/json?label=ads%20MRS&query=%24.badges.ads_mrs_size&url=https%3A%2F%2Fgithub.com%2FLynricsy%2FHyperADRules%2Freleases%2Flatest%2Fdownload%2Fstats.json&color=9333ea" alt="mrs size" />
+  </p>
 
-当前合并的上游：
+  <p>
+    <a href="#快速开始">快速开始</a> ·
+    <a href="#产物一览">产物</a> ·
+    <a href="#转换策略">转换策略</a> ·
+    <a href="#本地构建">本地构建</a>
+  </p>
+</div>
 
-- [AdGuard Home For Magisk Mod](https://github.com/liuzq2002/Adguard-Home-For-Magisk-Mod)
-- [anti-AD](https://github.com/privacy-protection-tools/anti-AD)
-- [dead-horse anti-AD whitelist](https://raw.githubusercontent.com/privacy-protection-tools/dead-horse/master/anti-ad-white-for-clash.yaml)
-- [Coolapk 1007 reward](https://raw.githubusercontent.com/lingeringsound/10007/main/reward)
+---
 
-## 产物
+## 这是什么
 
-GitHub Actions 会每天拉取上游仓库，生成并发布这些 Release 资产。下列文件名中的 `{kind}` 为 `ads` / `allow` / `malware`：
+**HyperADRules** 已全面升级为自动化规则转换流水线：
 
-| 文件 | 适用 | 说明 |
-|---|---|---|
-| `adrules_ultra_{kind}.mrs` | mihomo / Clash Meta | domain 二进制规则集 |
-| `adrules_ultra_{kind}_ipcidr.mrs` | mihomo / Clash Meta | ipcidr 二进制；空集也会发布（0 条规则的合法 MRS） |
-| `adrules_ultra_{kind}_singbox.srs` | sing-box >= 1.10 | 二进制 rule-set；exact / suffix / subdomain / wildcard 分别映射 |
-| `adrules_ultra_{kind}_singbox.json` | sing-box source | 编译 `.srs` 的源 JSON |
-| `adrules_ultra_{kind}_clash.yaml` | Clash / mihomo text | `behavior: domain` payload |
-| `adrules_ultra_{kind}_clash_ipcidr.yaml` | Clash / mihomo text | `behavior: ipcidr`；空集发布 `payload: []` |
-| `adrules_ultra_{kind}.txt` | mihomo text | domain text rule-provider，保留 `+.` / `.` 原语义 |
-| `adrules_ultra_{kind}_ipcidr.txt` | mihomo text | ipcidr text；无规则时写注释占位，仍会发布 |
-| `adrules_ultra_{kind}_domains.txt` | Pi-Hole 等 | 仅 exact + suffix 字面域名；不含 subdomain-only / wildcard |
-| `adrules_ultra_{kind}_surge.txt` | Surge | `DOMAIN` / `DOMAIN-SUFFIX` / `DOMAIN-WILDCARD` / `IP-CIDR` |
-| `adrules_ultra_{kind}_surge2.txt` | Surge DOMAIN-SET | exact 与 `.suffix`；不含 subdomain-only / wildcard |
-| `adrules_ultra_{kind}_adguard.txt` | AdGuard / 兼容工具 | exact 保持 hosts 精确；suffix 用 `||`；subdomain-only 用正则 |
-| `adrules_ultra_{kind}_easylist.txt` | AdGuard Home DNS | 与 adguard 文本同形 |
-| `adrules_ultra_{ads,malware}_dnsmasq.conf` | dnsmasq | 仅 suffix 阻断；**不**为 allow 生成 |
-| `adrules_ultra_{ads,malware}_smartdns.conf` | SmartDNS | 仅 suffix 阻断；**不**为 allow 生成 |
-| `manifest.md` | - | 本次转换统计和上游提交 |
-| `stats.json` | - | README 动态徽章读取的规则数量和 MRS 体积 |
-| `SHA256SUMS` | - | Release 资产校验和 |
+- 定时拉取多个 DNS 级上游，合并去重
+- **保守语义**：路径 / 端口 / 无法表达的 modifier **跳过**，绝不静默扩大为整域误杀
+- 一次构建，输出 **mihomo MRS / sing-box SRS / Clash / Surge / dnsmasq / SmartDNS / AdGuard** 等格式
+- 空 `ipcidr` 集合也会发布合法空资产，订阅 URL **不会 404**
 
-## 使用教程
+> 旧版仓库里的 `rules.txt` / `dns.txt` / `allow.txt` 静态大文件方案已退役。请改用下方 **Release 订阅**。  
+> 无需兼容旧订阅链接；请按本文档重新配置。
 
-### 1. 直接使用 Release
+### 上游来源
 
-使用 `latest/download` 地址即可长期订阅最新产物。推荐把本项目规则放进 `sub-rules`，让 `@@` 例外规则使用 `PASS`：命中白名单时只退出 AdRulesUltra 子规则，后续仍会继续匹配你自己的代理、直连、地区分流规则。
+| 上游 | 用途 |
+|---|---|
+| [AdGuard Home For Magisk Mod](https://github.com/liuzq2002/Adguard-Home-For-Magisk-Mod) | ads / malware / allow 主过滤器 |
+| [anti-AD](https://github.com/privacy-protection-tools/anti-AD) | Clash payload 广告域 + 例外 |
+| [dead-horse whitelist](https://raw.githubusercontent.com/privacy-protection-tools/dead-horse/master/anti-ad-white-for-clash.yaml) | 并入 allow |
+| [Coolapk 1007 reward](https://raw.githubusercontent.com/lingeringsound/10007/main/reward) | 补充 ads hosts |
+
+---
+
+## 快速开始
+
+### mihomo / Clash Meta（推荐）
+
+把规则放进 `sub-rules`，白名单用 `PASS`：只退出本项目过滤，不强制直连。
 
 ```yaml
 rule-providers:
-  adrules_ultra_allow:
+  hyper_allow:
     type: http
     behavior: domain
     format: mrs
     path: ./ruleset/adrules_ultra_allow.mrs
-    url: https://github.com/Lynricsy/AdRulesUltra/releases/latest/download/adrules_ultra_allow.mrs
+    url: https://github.com/Lynricsy/HyperADRules/releases/latest/download/adrules_ultra_allow.mrs
     interval: 86400
 
-  adrules_ultra_allow_ipcidr:
+  hyper_allow_ipcidr:
     type: http
     behavior: ipcidr
     format: mrs
     path: ./ruleset/adrules_ultra_allow_ipcidr.mrs
-    url: https://github.com/Lynricsy/AdRulesUltra/releases/latest/download/adrules_ultra_allow_ipcidr.mrs
+    url: https://github.com/Lynricsy/HyperADRules/releases/latest/download/adrules_ultra_allow_ipcidr.mrs
     interval: 86400
 
-  adrules_ultra_ads:
+  hyper_ads:
     type: http
     behavior: domain
     format: mrs
     path: ./ruleset/adrules_ultra_ads.mrs
-    url: https://github.com/Lynricsy/AdRulesUltra/releases/latest/download/adrules_ultra_ads.mrs
+    url: https://github.com/Lynricsy/HyperADRules/releases/latest/download/adrules_ultra_ads.mrs
     interval: 86400
 
-  adrules_ultra_ads_ipcidr:
+  hyper_ads_ipcidr:
     type: http
     behavior: ipcidr
     format: mrs
     path: ./ruleset/adrules_ultra_ads_ipcidr.mrs
-    url: https://github.com/Lynricsy/AdRulesUltra/releases/latest/download/adrules_ultra_ads_ipcidr.mrs
+    url: https://github.com/Lynricsy/HyperADRules/releases/latest/download/adrules_ultra_ads_ipcidr.mrs
     interval: 86400
 
-  adrules_ultra_malware:
+  hyper_malware:
     type: http
     behavior: domain
     format: mrs
     path: ./ruleset/adrules_ultra_malware.mrs
-    url: https://github.com/Lynricsy/AdRulesUltra/releases/latest/download/adrules_ultra_malware.mrs
+    url: https://github.com/Lynricsy/HyperADRules/releases/latest/download/adrules_ultra_malware.mrs
+    interval: 86400
+
+  hyper_malware_ipcidr:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    path: ./ruleset/adrules_ultra_malware_ipcidr.mrs
+    url: https://github.com/Lynricsy/HyperADRules/releases/latest/download/adrules_ultra_malware_ipcidr.mrs
     interval: 86400
 
 rules:
-  - SUB-RULE,(NETWORK,tcp),adrules_ultra_filter
-  - SUB-RULE,(NETWORK,udp),adrules_ultra_filter
-  # 这里继续放你原本的代理、直连、地区分流规则。
+  - SUB-RULE,(NETWORK,tcp),hyper_filter
+  - SUB-RULE,(NETWORK,udp),hyper_filter
+  # 这里继续你的代理 / 直连 / 地区分流
   - MATCH,DIRECT
 
 sub-rules:
-  adrules_ultra_filter:
-    - RULE-SET,adrules_ultra_allow,PASS
-    - RULE-SET,adrules_ultra_allow_ipcidr,PASS,no-resolve
-    - RULE-SET,adrules_ultra_ads,REJECT
-    - RULE-SET,adrules_ultra_ads_ipcidr,REJECT,no-resolve
-    - RULE-SET,adrules_ultra_malware,REJECT
+  hyper_filter:
+    - RULE-SET,hyper_allow,PASS
+    - RULE-SET,hyper_allow_ipcidr,PASS,no-resolve
+    - RULE-SET,hyper_ads,REJECT
+    - RULE-SET,hyper_ads_ipcidr,REJECT,no-resolve
+    - RULE-SET,hyper_malware,REJECT
+    - RULE-SET,hyper_malware_ipcidr,REJECT,no-resolve
     - MATCH,PASS
 ```
 
-`*_ipcidr` 资产**始终发布**：有规则时用 mihomo 编译；无规则时写入已验证的 0 条规则空 MRS，以及带注释的 text / `payload: []` YAML。  
-这样客户端订阅固定 URL 不会 404。`stats.json` 的 `ipcidrs` 计数会忽略注释占位行。
+**注意**
 
-不要把 `adrules_ultra_allow` 直接写成 `DIRECT`，否则命中 `@@` 例外的域名会强制直连，无法继续匹配你后面的代理规则。也不要把 `PASS` 白名单和 `REJECT` 拦截规则平铺在同一个 `rules` 列表里，否则白名单 `PASS` 后仍可能继续命中后面的广告拦截规则。
+- 不要把 allow 写成 `DIRECT`，否则例外域名无法再走你后面的代理规则
+- 不要把 `PASS` 白名单和 `REJECT` 平铺在同一层 `rules` 里
 
-### 2. 手动下载校验
+### 手动下载
 
 ```bash
-mkdir -p ruleset
-cd ruleset
+mkdir -p ruleset && cd ruleset
+base=https://github.com/Lynricsy/HyperADRules/releases/latest/download
 
-base=https://github.com/Lynricsy/AdRulesUltra/releases/latest/download
 curl -fLO "$base/adrules_ultra_allow.mrs"
-curl -fLO "$base/adrules_ultra_ads.mrs"
-curl -fLO "$base/adrules_ultra_malware.mrs"
-curl -fLO "$base/adrules_ultra_ads_ipcidr.mrs"
 curl -fLO "$base/adrules_ultra_allow_ipcidr.mrs"
+curl -fLO "$base/adrules_ultra_ads.mrs"
+curl -fLO "$base/adrules_ultra_ads_ipcidr.mrs"
+curl -fLO "$base/adrules_ultra_malware.mrs"
 curl -fLO "$base/adrules_ultra_malware_ipcidr.mrs"
 curl -fLO "$base/SHA256SUMS"
 
 sed 's#  dist/#  #' SHA256SUMS | sha256sum -c --ignore-missing
 ```
 
-`SHA256SUMS` 里会列出本次 Release 的全部资产；`--ignore-missing` 允许你只下载自己启用的规则集。空的 `*_ipcidr` 也会进入清单（0 条规则占位）。
+---
 
-### 3. 自动更新来源
+## 产物一览
 
-仓库自带 GitHub Actions：每天 UTC `20:23` 拉取四个上游，生成多格式文本，调用 mihomo 生成 `.mrs`、调用 sing-box 生成 `.srs`，再发布到 Release。需要立即刷新时，也可以在 Actions 页面手动运行 `Build and release AdRulesUltra rulesets`。
+GitHub Actions 每天 UTC `20:23` 构建并发布。文件名中 `{kind}` = `ads` / `allow` / `malware`。
 
-Release tag 约定：
+| 文件 | 客户端 | 说明 |
+|---|---|---|
+| `adrules_ultra_{kind}.mrs` | mihomo | domain 二进制 |
+| `adrules_ultra_{kind}_ipcidr.mrs` | mihomo | ipcidr 二进制；**空集也会发布** |
+| `adrules_ultra_{kind}_singbox.srs` | sing-box ≥ 1.10 | 二进制 rule-set |
+| `adrules_ultra_{kind}_singbox.json` | sing-box | SRS 源 |
+| `adrules_ultra_{kind}_clash.yaml` | Clash | `behavior: domain` |
+| `adrules_ultra_{kind}_clash_ipcidr.yaml` | Clash | `behavior: ipcidr`；空集 `payload: []` |
+| `adrules_ultra_{kind}.txt` | mihomo text | 保留 `+.` / `.` 语义 |
+| `adrules_ultra_{kind}_ipcidr.txt` | mihomo text | 无规则时注释占位 |
+| `adrules_ultra_{kind}_domains.txt` | Pi-hole 等 | exact + suffix 字面量 |
+| `adrules_ultra_{kind}_surge.txt` / `_surge2.txt` | Surge | DOMAIN* / DOMAIN-SET |
+| `adrules_ultra_{kind}_adguard.txt` / `_easylist.txt` | AdGuard | 文本规则 |
+| `adrules_ultra_{ads,malware}_dnsmasq.conf` | dnsmasq | 仅 suffix 阻断 |
+| `adrules_ultra_{ads,malware}_smartdns.conf` | SmartDNS | 仅 suffix 阻断 |
+| `manifest.md` / `stats.json` / `SHA256SUMS` | - | 统计与校验 |
 
-- **新 release** 使用日期 tag：`snapshot-YYYYMMDD`（UTC 日期），例如 `snapshot-20260727`
-- release notes 会额外记录 `CONTENT_ID`（`dist/SHA256SUMS` 的 sha256 前 16 位），用于追溯转换器 + 上游 + 编译产物
-- 同日重跑：若远端同 tag 资产完整且 `SHA256SUMS` 一致则跳过发布；残缺或不一致会删除后重建，不再覆盖旧 asset
-- **历史长 tag**（拼接上游完整哈希的旧格式）会保留，不影响 `releases/latest` 下载
+### Release tag
+
+- 新 tag：`snapshot-YYYYMMDD`（UTC 日期）
+- notes 含 `CONTENT_ID`（`SHA256SUMS` 指纹前 16 位）
+- 同日重跑：完整且 checksum 一致则跳过；残缺则删重建
+
+---
 
 ## 转换策略
 
-转换器只保留能被 mihomo `domain` / `ipcidr` MRS 安全表达的 DNS 级规则：
+只保留 DNS / domain 层能**完整表达**的规则：
 
-- anti-AD 广告主列表直接读取 `anti-ad-clash.yaml` 的 `payload`
-- dead-horse 的 `anti-ad-white-for-clash.yaml` 会合入 `adrules_ultra_allow`
-- `||example.com^` 转为 `+.example.com`
-- `@@||example.com^` 转入 `adrules_ultra_allow`
-- `||203.0.113.1^` 转为 `203.0.113.1/32`
-- `||216.239.35.0/24^` 转为 `216.239.35.0/24`
-- `0.0.0.0 ads.example.com` 这类 hosts 规则转为 `ads.example.com`
-- `||example.com/path.js^`、`||example.com:8443^` 这类带 URL 路径/端口的规则会被跳过，不再静默扩大为整域拦截
-- `||ads*-normal*.example.com^` 这类可被 mihomo domain MRS 编译的 wildcard 会保留为 `+.ads*-normal*.example.com`
-- `@@|blob:https://www.example.com` 这类仅有 host、无路径/端口的 URL 例外会转入 `adrules_ultra_allow`
-- `$important` 会被接受，但 mihomo 只能靠规则顺序近似优先级
-- 导出其他格式时会区分：
-  - exact: `exact.example.com`
-  - suffix: `+.example.com`（apex + 子域）
-  - subdomain-only: `.example.com`（仅子域，不命中 apex）
-  - wildcard: 含 `*` 的模式
-- dnsmasq / SmartDNS 只接受明确的 suffix 阻断，exact 与 subdomain-only 不会被静默扩大
-- allow 不会输出 dnsmasq / SmartDNS 阻断配置
+| 输入 | 结果 |
+|---|---|
+| `\|\|example.com^` | `+.example.com` |
+| `@@\|\|example.com^` | allow 集合 |
+| `\|\|1.2.3.4^` / CIDR | ipcidr |
+| hosts `0.0.0.0 ads.example.com` | exact domain |
+| `\|\|example.com/path`、`:8443`、query/fragment | **跳过**（不整域扩大） |
+| 无法表达的 `$script` 等 modifier | **跳过** |
+| 安全 wildcard | 保留为 Clash/mihomo 可编译形式 |
 
-默认策略是保守转换：DNS/domain 规则集无法完整表达的语义一律跳过，而不是把路径、端口或修饰符降级成整域命中。带 `@@` 的例外规则建议在 `sub-rules` 内用 `PASS` 近似“取消本项目拦截，然后回到主规则继续分流”。
+跳过原因会进入 `unsupported_path` / `unsupported_port` / `unsupported_modifier` 统计。
 
-这些规则会被跳过并写入统计：
+---
 
-- 正则规则，例如 `/example.*/`
-- 带 URL 路径、query、fragment 或显式端口的规则（blocking / exception 均跳过）
-- 纯路径规则或无法解析 host 的 URL 规则
-- 只有 `$domain=` / `$app=` / `$client=` 这类条件、但没有拦截目标 host 的规则
-- 无法在 DNS 层完整表达的修饰符规则，例如 `$script`、`$client`、`$dnstype`、`$dnsrewrite`
-- 无法安全映射到 Clash wildcard 的复杂模式
-
-## 本地运行
+## 本地构建
 
 ```bash
 git clone --depth=1 https://github.com/liuzq2002/Adguard-Home-For-Magisk-Mod upstream-adguard
 git clone --depth=1 https://github.com/privacy-protection-tools/anti-AD upstream-anti-ad
-curl -fsSL https://raw.githubusercontent.com/privacy-protection-tools/dead-horse/master/anti-ad-white-for-clash.yaml -o upstream-anti-ad/anti-ad-white-for-clash.yaml
-curl -fsSL https://raw.githubusercontent.com/lingeringsound/10007/main/reward -o upstream-coolapk-1007-reward.txt
+curl -fsSL https://raw.githubusercontent.com/privacy-protection-tools/dead-horse/master/anti-ad-white-for-clash.yaml \
+  -o upstream-anti-ad/anti-ad-white-for-clash.yaml
+curl -fsSL https://raw.githubusercontent.com/lingeringsound/10007/main/reward \
+  -o upstream-coolapk-1007-reward.txt
 
 uv run python -m scripts.build_rulesets \
   --adguard-source upstream-adguard \
@@ -196,14 +225,21 @@ uv run python -m scripts.build_rulesets \
   --coolapk-1007-reward-commit "$(sha256sum upstream-coolapk-1007-reward.txt | cut -d ' ' -f 1)"
 ```
 
-生成 `.mrs` 需要 mihomo，生成 `.srs` 需要 sing-box：
+生成二进制：
 
 ```bash
 mihomo convert-ruleset domain text dist/adrules_ultra_ads.txt dist/adrules_ultra_ads.mrs
-mihomo convert-ruleset domain text dist/adrules_ultra_allow.txt dist/adrules_ultra_allow.mrs
-mihomo convert-ruleset domain text dist/adrules_ultra_malware.txt dist/adrules_ultra_malware.mrs
+# 空 ipcidr 由流水线写入合法空 MRS；有规则时同样 convert-ruleset ipcidr
 
 sing-box rule-set compile --output dist/adrules_ultra_ads_singbox.srs dist/adrules_ultra_ads_singbox.json
-sing-box rule-set compile --output dist/adrules_ultra_allow_singbox.srs dist/adrules_ultra_allow_singbox.json
-sing-box rule-set compile --output dist/adrules_ultra_malware_singbox.srs dist/adrules_ultra_malware_singbox.json
 ```
+
+---
+
+## 反馈
+
+误杀 / 漏拦欢迎开 Issue。规则会定期从上游重建；本仓库只做**保守、可追溯**的格式转换与发布。
+
+<div align="center">
+  <sub>Logo 沿用 HyperADRules 经典头图 · 由自动化转换引擎驱动</sub>
+</div>

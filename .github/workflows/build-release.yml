@@ -1,4 +1,4 @@
-name: Build and release AdRulesUltra rulesets
+name: Build and release HyperADRules rulesets
 
 on:
   workflow_dispatch:
@@ -190,7 +190,7 @@ jobs:
         if: steps.snapshot.outputs.publish == 'true'
         run: |
           {
-            echo "# AdRulesUltra multi-format rulesets"
+            echo "# HyperADRules multi-format rulesets"
             echo
             echo "- Release tag: \`$RELEASE_TAG\`"
             echo "- Content id: \`$CONTENT_ID\` (sha256 of dist/SHA256SUMS, first 16 hex)"
@@ -213,7 +213,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_TAG }}
-          name: AdRulesUltra rulesets ${{ env.RELEASE_DATE }}
+          name: HyperADRules rulesets ${{ env.RELEASE_DATE }}
           body_path: release-notes.md
           files: |
             dist/*.mrs

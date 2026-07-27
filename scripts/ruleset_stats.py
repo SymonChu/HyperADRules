@@ -195,7 +195,7 @@ def write_stats_file(output_dir: Path) -> Path:
 
 
 def parse_args(argv: Sequence[str]) -> StatsArgs:
-    parser = argparse.ArgumentParser(description="Write AdRulesUltra release statistics JSON.")
+    parser = argparse.ArgumentParser(description="Write HyperADRules release statistics JSON.")
     _ = parser.add_argument("--output", type=Path, required=True)
     namespace = parser.parse_args(argv)
     parsed: dict[str, object] = vars(namespace)

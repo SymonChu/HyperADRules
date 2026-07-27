@@ -130,7 +130,7 @@ def _write_clash_payload_yaml(
     items: Sequence[str],
 ) -> None:
     lines = [
-        f"# AdRulesUltra {kind.value} Clash/mihomo text rule-provider ({behavior})",
+        f"# HyperADRules {kind.value} Clash/mihomo text rule-provider ({behavior})",
         "payload:",
     ]
     if items:
