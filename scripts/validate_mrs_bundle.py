@@ -17,32 +17,32 @@ rule-providers:
     type: file
     behavior: domain
     format: mrs
-    path: ./ruleset/adrules_ultra_ads.mrs
+    path: ./ruleset/hyper_adrules_ads.mrs
   ads_ipcidr:
     type: file
     behavior: ipcidr
     format: mrs
-    path: ./ruleset/adrules_ultra_ads_ipcidr.mrs
+    path: ./ruleset/hyper_adrules_ads_ipcidr.mrs
   allow_domain:
     type: file
     behavior: domain
     format: mrs
-    path: ./ruleset/adrules_ultra_allow.mrs
+    path: ./ruleset/hyper_adrules_allow.mrs
   allow_ipcidr:
     type: file
     behavior: ipcidr
     format: mrs
-    path: ./ruleset/adrules_ultra_allow_ipcidr.mrs
+    path: ./ruleset/hyper_adrules_allow_ipcidr.mrs
   malware_domain:
     type: file
     behavior: domain
     format: mrs
-    path: ./ruleset/adrules_ultra_malware.mrs
+    path: ./ruleset/hyper_adrules_malware.mrs
   malware_ipcidr:
     type: file
     behavior: ipcidr
     format: mrs
-    path: ./ruleset/adrules_ultra_malware_ipcidr.mrs
+    path: ./ruleset/hyper_adrules_malware_ipcidr.mrs
 rules:
   - RULE-SET,allow_domain,PASS
   - RULE-SET,allow_ipcidr,PASS,no-resolve
@@ -66,12 +66,12 @@ def main(argv: list[str] | None = None) -> int:
     dist = cast("Path", args.dist)
     mihomo = cast("Path", args.mihomo)
     required = [
-        "adrules_ultra_ads.mrs",
-        "adrules_ultra_ads_ipcidr.mrs",
-        "adrules_ultra_allow.mrs",
-        "adrules_ultra_allow_ipcidr.mrs",
-        "adrules_ultra_malware.mrs",
-        "adrules_ultra_malware_ipcidr.mrs",
+        "hyper_adrules_ads.mrs",
+        "hyper_adrules_ads_ipcidr.mrs",
+        "hyper_adrules_allow.mrs",
+        "hyper_adrules_allow_ipcidr.mrs",
+        "hyper_adrules_malware.mrs",
+        "hyper_adrules_malware_ipcidr.mrs",
     ]
     for name in required:
         path = dist / name

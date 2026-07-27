@@ -22,7 +22,7 @@ from scripts.ruleset_domain import (
 from scripts.ruleset_mrs import EMPTY_IPCIDR_TEXT_PLACEHOLDER
 from scripts.ruleset_types import RuleBuckets, RuleKind
 
-OUTPUT_PREFIX: Final[str] = "adrules_ultra"
+OUTPUT_PREFIX: Final[str] = "hyper_adrules"
 SING_BOX_RULESET_VERSION: Final[int] = 2
 
 # 动作型 DNS 阻断格式只能用于 ads/malware, allow 没有对称的标准白名单语法。

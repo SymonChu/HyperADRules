@@ -71,48 +71,48 @@ rule-providers:
     type: http
     behavior: domain
     format: mrs
-    path: ./ruleset/adrules_ultra_allow.mrs
-    url: https://github.com/Lynricsy/HyperADRules/releases/latest/download/adrules_ultra_allow.mrs
+    path: ./ruleset/hyper_adrules_allow.mrs
+    url: https://github.com/Lynricsy/HyperADRules/releases/latest/download/hyper_adrules_allow.mrs
     interval: 86400
 
   hyper_allow_ipcidr:
     type: http
     behavior: ipcidr
     format: mrs
-    path: ./ruleset/adrules_ultra_allow_ipcidr.mrs
-    url: https://github.com/Lynricsy/HyperADRules/releases/latest/download/adrules_ultra_allow_ipcidr.mrs
+    path: ./ruleset/hyper_adrules_allow_ipcidr.mrs
+    url: https://github.com/Lynricsy/HyperADRules/releases/latest/download/hyper_adrules_allow_ipcidr.mrs
     interval: 86400
 
   hyper_ads:
     type: http
     behavior: domain
     format: mrs
-    path: ./ruleset/adrules_ultra_ads.mrs
-    url: https://github.com/Lynricsy/HyperADRules/releases/latest/download/adrules_ultra_ads.mrs
+    path: ./ruleset/hyper_adrules_ads.mrs
+    url: https://github.com/Lynricsy/HyperADRules/releases/latest/download/hyper_adrules_ads.mrs
     interval: 86400
 
   hyper_ads_ipcidr:
     type: http
     behavior: ipcidr
     format: mrs
-    path: ./ruleset/adrules_ultra_ads_ipcidr.mrs
-    url: https://github.com/Lynricsy/HyperADRules/releases/latest/download/adrules_ultra_ads_ipcidr.mrs
+    path: ./ruleset/hyper_adrules_ads_ipcidr.mrs
+    url: https://github.com/Lynricsy/HyperADRules/releases/latest/download/hyper_adrules_ads_ipcidr.mrs
     interval: 86400
 
   hyper_malware:
     type: http
     behavior: domain
     format: mrs
-    path: ./ruleset/adrules_ultra_malware.mrs
-    url: https://github.com/Lynricsy/HyperADRules/releases/latest/download/adrules_ultra_malware.mrs
+    path: ./ruleset/hyper_adrules_malware.mrs
+    url: https://github.com/Lynricsy/HyperADRules/releases/latest/download/hyper_adrules_malware.mrs
     interval: 86400
 
   hyper_malware_ipcidr:
     type: http
     behavior: ipcidr
     format: mrs
-    path: ./ruleset/adrules_ultra_malware_ipcidr.mrs
-    url: https://github.com/Lynricsy/HyperADRules/releases/latest/download/adrules_ultra_malware_ipcidr.mrs
+    path: ./ruleset/hyper_adrules_malware_ipcidr.mrs
+    url: https://github.com/Lynricsy/HyperADRules/releases/latest/download/hyper_adrules_malware_ipcidr.mrs
     interval: 86400
 
 rules:
@@ -143,12 +143,12 @@ sub-rules:
 mkdir -p ruleset && cd ruleset
 base=https://github.com/Lynricsy/HyperADRules/releases/latest/download
 
-curl -fLO "$base/adrules_ultra_allow.mrs"
-curl -fLO "$base/adrules_ultra_allow_ipcidr.mrs"
-curl -fLO "$base/adrules_ultra_ads.mrs"
-curl -fLO "$base/adrules_ultra_ads_ipcidr.mrs"
-curl -fLO "$base/adrules_ultra_malware.mrs"
-curl -fLO "$base/adrules_ultra_malware_ipcidr.mrs"
+curl -fLO "$base/hyper_adrules_allow.mrs"
+curl -fLO "$base/hyper_adrules_allow_ipcidr.mrs"
+curl -fLO "$base/hyper_adrules_ads.mrs"
+curl -fLO "$base/hyper_adrules_ads_ipcidr.mrs"
+curl -fLO "$base/hyper_adrules_malware.mrs"
+curl -fLO "$base/hyper_adrules_malware_ipcidr.mrs"
 curl -fLO "$base/SHA256SUMS"
 
 sed 's#  dist/#  #' SHA256SUMS | sha256sum -c --ignore-missing
@@ -162,19 +162,19 @@ GitHub Actions 每天 UTC `20:23` 构建并发布。文件名中 `{kind}` = `ads
 
 | 文件 | 客户端 | 说明 |
 |---|---|---|
-| `adrules_ultra_{kind}.mrs` | mihomo | domain 二进制 |
-| `adrules_ultra_{kind}_ipcidr.mrs` | mihomo | ipcidr 二进制；**空集也会发布** |
-| `adrules_ultra_{kind}_singbox.srs` | sing-box ≥ 1.10 | 二进制 rule-set |
-| `adrules_ultra_{kind}_singbox.json` | sing-box | SRS 源 |
-| `adrules_ultra_{kind}_clash.yaml` | Clash | `behavior: domain` |
-| `adrules_ultra_{kind}_clash_ipcidr.yaml` | Clash | `behavior: ipcidr`；空集 `payload: []` |
-| `adrules_ultra_{kind}.txt` | mihomo text | 保留 `+.` / `.` 语义 |
-| `adrules_ultra_{kind}_ipcidr.txt` | mihomo text | 无规则时注释占位 |
-| `adrules_ultra_{kind}_domains.txt` | Pi-hole 等 | exact + suffix 字面量 |
-| `adrules_ultra_{kind}_surge.txt` / `_surge2.txt` | Surge | DOMAIN* / DOMAIN-SET |
-| `adrules_ultra_{kind}_adguard.txt` / `_easylist.txt` | AdGuard | 文本规则 |
-| `adrules_ultra_{ads,malware}_dnsmasq.conf` | dnsmasq | 仅 suffix 阻断 |
-| `adrules_ultra_{ads,malware}_smartdns.conf` | SmartDNS | 仅 suffix 阻断 |
+| `hyper_adrules_{kind}.mrs` | mihomo | domain 二进制 |
+| `hyper_adrules_{kind}_ipcidr.mrs` | mihomo | ipcidr 二进制；**空集也会发布** |
+| `hyper_adrules_{kind}_singbox.srs` | sing-box ≥ 1.10 | 二进制 rule-set |
+| `hyper_adrules_{kind}_singbox.json` | sing-box | SRS 源 |
+| `hyper_adrules_{kind}_clash.yaml` | Clash | `behavior: domain` |
+| `hyper_adrules_{kind}_clash_ipcidr.yaml` | Clash | `behavior: ipcidr`；空集 `payload: []` |
+| `hyper_adrules_{kind}.txt` | mihomo text | 保留 `+.` / `.` 语义 |
+| `hyper_adrules_{kind}_ipcidr.txt` | mihomo text | 无规则时注释占位 |
+| `hyper_adrules_{kind}_domains.txt` | Pi-hole 等 | exact + suffix 字面量 |
+| `hyper_adrules_{kind}_surge.txt` / `_surge2.txt` | Surge | DOMAIN* / DOMAIN-SET |
+| `hyper_adrules_{kind}_adguard.txt` / `_easylist.txt` | AdGuard | 文本规则 |
+| `hyper_adrules_{ads,malware}_dnsmasq.conf` | dnsmasq | 仅 suffix 阻断 |
+| `hyper_adrules_{ads,malware}_smartdns.conf` | SmartDNS | 仅 suffix 阻断 |
 | `manifest.md` / `stats.json` / `SHA256SUMS` | - | 统计与校验 |
 
 ### Release tag
@@ -227,10 +227,10 @@ uv run python -m scripts.build_rulesets \
 生成二进制：
 
 ```bash
-mihomo convert-ruleset domain text dist/adrules_ultra_ads.txt dist/adrules_ultra_ads.mrs
+mihomo convert-ruleset domain text dist/hyper_adrules_ads.txt dist/hyper_adrules_ads.mrs
 # 空 ipcidr 由流水线写入合法空 MRS；有规则时同样 convert-ruleset ipcidr
 
-sing-box rule-set compile --output dist/adrules_ultra_ads_singbox.srs dist/adrules_ultra_ads_singbox.json
+sing-box rule-set compile --output dist/hyper_adrules_ads_singbox.srs dist/hyper_adrules_ads_singbox.json
 ```
 
 ---

@@ -16,7 +16,7 @@ from scripts.ruleset_types import (
 COMMENT_PREFIXES: Final[tuple[str, ...]] = ("!", "#", "[")
 EXCEPTION_PREFIX: Final[str] = "@@"
 MIN_QUOTED_LENGTH: Final[int] = 2
-OUTPUT_PREFIX: Final[str] = "adrules_ultra"
+OUTPUT_PREFIX: Final[str] = "hyper_adrules"
 
 def convert_repositories(
     adguard_source_dir: Path,

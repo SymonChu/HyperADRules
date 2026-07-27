@@ -310,16 +310,16 @@ def test_build_stats_payload_when_release_assets_exist(tmp_path: Path) -> None:
     total_rule_count = 5
     ads_mrs_bytes = 1536
 
-    _ = (tmp_path / "adrules_ultra_ads.txt").write_text("+.ads.example\n+.ads-two.example\n", encoding="utf-8")
-    _ = (tmp_path / "adrules_ultra_ads_ipcidr.txt").write_text("203.0.113.1/32\n", encoding="utf-8")
-    _ = (tmp_path / "adrules_ultra_allow.txt").write_text("+.safe.example\n", encoding="utf-8")
-    _ = (tmp_path / "adrules_ultra_allow_ipcidr.txt").write_text("", encoding="utf-8")
-    _ = (tmp_path / "adrules_ultra_malware.txt").write_text("+.bad.example\n", encoding="utf-8")
-    _ = (tmp_path / "adrules_ultra_malware_ipcidr.txt").write_text("", encoding="utf-8")
-    _ = (tmp_path / "adrules_ultra_ads.mrs").write_bytes(b"a" * ads_mrs_bytes)
-    _ = (tmp_path / "adrules_ultra_ads_ipcidr.mrs").write_bytes(b"ip")
-    _ = (tmp_path / "adrules_ultra_allow.mrs").write_bytes(b"allow")
-    _ = (tmp_path / "adrules_ultra_malware.mrs").write_bytes(b"malware")
+    _ = (tmp_path / "hyper_adrules_ads.txt").write_text("+.ads.example\n+.ads-two.example\n", encoding="utf-8")
+    _ = (tmp_path / "hyper_adrules_ads_ipcidr.txt").write_text("203.0.113.1/32\n", encoding="utf-8")
+    _ = (tmp_path / "hyper_adrules_allow.txt").write_text("+.safe.example\n", encoding="utf-8")
+    _ = (tmp_path / "hyper_adrules_allow_ipcidr.txt").write_text("", encoding="utf-8")
+    _ = (tmp_path / "hyper_adrules_malware.txt").write_text("+.bad.example\n", encoding="utf-8")
+    _ = (tmp_path / "hyper_adrules_malware_ipcidr.txt").write_text("", encoding="utf-8")
+    _ = (tmp_path / "hyper_adrules_ads.mrs").write_bytes(b"a" * ads_mrs_bytes)
+    _ = (tmp_path / "hyper_adrules_ads_ipcidr.mrs").write_bytes(b"ip")
+    _ = (tmp_path / "hyper_adrules_allow.mrs").write_bytes(b"allow")
+    _ = (tmp_path / "hyper_adrules_malware.mrs").write_bytes(b"malware")
 
     payload = build_stats_payload(tmp_path)
 
@@ -340,7 +340,7 @@ def test_build_stats_payload_when_release_assets_exist(tmp_path: Path) -> None:
 
 
 def test_count_lines_ignores_comment_only_ipcidr_placeholder(tmp_path: Path) -> None:
-    path = tmp_path / "adrules_ultra_allow_ipcidr.txt"
+    path = tmp_path / "hyper_adrules_allow_ipcidr.txt"
     _ = path.write_text("# empty ipcidr ruleset\n", encoding="utf-8")
     assert count_lines(path) == 0
 
@@ -360,31 +360,31 @@ def test_write_kind_text_formats_emits_empty_allow_ipcidr_assets(tmp_path: Path)
     buckets = RuleBuckets(domains=frozenset({"+.safe.example.com"}))
     _ = write_kind_text_formats(RuleKind.ALLOW, buckets, tmp_path)
 
-    ipcidr_txt = (tmp_path / "adrules_ultra_allow_ipcidr.txt").read_text(encoding="utf-8")
+    ipcidr_txt = (tmp_path / "hyper_adrules_allow_ipcidr.txt").read_text(encoding="utf-8")
     assert ipcidr_txt.startswith("#")
-    assert count_lines(tmp_path / "adrules_ultra_allow_ipcidr.txt") == 0
-    clash_ip = (tmp_path / "adrules_ultra_allow_clash_ipcidr.yaml").read_text(encoding="utf-8")
+    assert count_lines(tmp_path / "hyper_adrules_allow_ipcidr.txt") == 0
+    clash_ip = (tmp_path / "hyper_adrules_allow_clash_ipcidr.yaml").read_text(encoding="utf-8")
     assert "(ipcidr)" in clash_ip
     assert "payload:" in clash_ip
     assert "[]" in clash_ip
 
 def test_expected_release_assets_includes_checksum_file_itself() -> None:
     checksum_text = (
-        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa  dist/adrules_ultra_ads.txt\n"
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa  dist/hyper_adrules_ads.txt\n"
         "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb  dist/manifest.md\n"
     )
 
     assets = expected_release_assets(checksum_text)
 
-    assert assets == frozenset({"adrules_ultra_ads.txt", "manifest.md", "SHA256SUMS"})
+    assert assets == frozenset({"hyper_adrules_ads.txt", "manifest.md", "SHA256SUMS"})
 
 
 def test_release_assets_complete_when_remote_matches_checksum_and_names() -> None:
     checksum_text = (
-        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa  adrules_ultra_ads.txt\n"
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa  hyper_adrules_ads.txt\n"
         "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb  manifest.md\n"
     )
-    remote_names = {"adrules_ultra_ads.txt", "manifest.md", "SHA256SUMS"}
+    remote_names = {"hyper_adrules_ads.txt", "manifest.md", "SHA256SUMS"}
 
     assert release_assets_complete(
         local_checksum_text=checksum_text,
@@ -395,10 +395,10 @@ def test_release_assets_complete_when_remote_matches_checksum_and_names() -> Non
 
 def test_release_assets_incomplete_when_checksum_file_missing_from_remote() -> None:
     checksum_text = (
-        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa  adrules_ultra_ads.txt\n"
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa  hyper_adrules_ads.txt\n"
         "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb  manifest.md\n"
     )
-    remote_names = {"adrules_ultra_ads.txt", "manifest.md"}
+    remote_names = {"hyper_adrules_ads.txt", "manifest.md"}
 
     assert not release_assets_complete(
         local_checksum_text=checksum_text,
@@ -439,47 +439,47 @@ def test_write_kind_text_formats_preserves_mihomo_semantics(tmp_path: Path) -> N
 
     stats = write_kind_text_formats(RuleKind.ADS, buckets, tmp_path)
 
-    mihomo = (tmp_path / "adrules_ultra_ads.txt").read_text(encoding="utf-8").splitlines()
+    mihomo = (tmp_path / "hyper_adrules_ads.txt").read_text(encoding="utf-8").splitlines()
     assert "exact.example.com" in mihomo
     assert "+.suffix.example.com" in mihomo
     assert ".sub.example.com" in mihomo
     assert "+.ads*-wild.example.com" in mihomo
     assert "+.sub.example.com" not in mihomo
 
-    clash_domain = (tmp_path / "adrules_ultra_ads_clash.yaml").read_text(encoding="utf-8")
+    clash_domain = (tmp_path / "hyper_adrules_ads_clash.yaml").read_text(encoding="utf-8")
     assert "203.0.113.1/32" not in clash_domain
     assert ".sub.example.com" in clash_domain
-    clash_ip = (tmp_path / "adrules_ultra_ads_clash_ipcidr.yaml").read_text(encoding="utf-8")
+    clash_ip = (tmp_path / "hyper_adrules_ads_clash_ipcidr.yaml").read_text(encoding="utf-8")
     assert "203.0.113.1/32" in clash_ip
     assert "exact.example.com" not in clash_ip
 
-    domains_txt = (tmp_path / "adrules_ultra_ads_domains.txt").read_text(encoding="utf-8").splitlines()
+    domains_txt = (tmp_path / "hyper_adrules_ads_domains.txt").read_text(encoding="utf-8").splitlines()
     assert domains_txt == ["exact.example.com", "suffix.example.com"]
 
-    surge = (tmp_path / "adrules_ultra_ads_surge.txt").read_text(encoding="utf-8").splitlines()
+    surge = (tmp_path / "hyper_adrules_ads_surge.txt").read_text(encoding="utf-8").splitlines()
     assert "DOMAIN,exact.example.com" in surge
     assert "DOMAIN-SUFFIX,suffix.example.com" in surge
     assert "DOMAIN-WILDCARD,*.sub.example.com" in surge
     assert "IP-CIDR,203.0.113.1/32" in surge
 
-    surge2 = (tmp_path / "adrules_ultra_ads_surge2.txt").read_text(encoding="utf-8").splitlines()
+    surge2 = (tmp_path / "hyper_adrules_ads_surge2.txt").read_text(encoding="utf-8").splitlines()
     assert "exact.example.com" in surge2
     assert ".suffix.example.com" in surge2
     assert ".sub.example.com" not in surge2
 
-    dnsmasq = (tmp_path / "adrules_ultra_ads_dnsmasq.conf").read_text(encoding="utf-8").splitlines()
+    dnsmasq = (tmp_path / "hyper_adrules_ads_dnsmasq.conf").read_text(encoding="utf-8").splitlines()
     assert dnsmasq == ["address=/suffix.example.com/"]
 
-    smartdns = (tmp_path / "adrules_ultra_ads_smartdns.conf").read_text(encoding="utf-8").splitlines()
+    smartdns = (tmp_path / "hyper_adrules_ads_smartdns.conf").read_text(encoding="utf-8").splitlines()
     assert smartdns == ["address /suffix.example.com/#"]
 
-    adguard = (tmp_path / "adrules_ultra_ads_adguard.txt").read_text(encoding="utf-8").splitlines()
+    adguard = (tmp_path / "hyper_adrules_ads_adguard.txt").read_text(encoding="utf-8").splitlines()
     assert "exact.example.com" in adguard
     assert "||suffix.example.com^" in adguard
     assert "/^.+\\.sub\\.example\\.com$/" in adguard
     assert all("ads*-wild" not in line for line in adguard)
 
-    payload = json.loads((tmp_path / "adrules_ultra_ads_singbox.json").read_text(encoding="utf-8"))
+    payload = json.loads((tmp_path / "hyper_adrules_ads_singbox.json").read_text(encoding="utf-8"))
     rule = payload["rules"][0]
     assert rule["domain"] == ["exact.example.com"]
     assert rule["domain_suffix"] == ["suffix.example.com"]
@@ -494,9 +494,9 @@ def test_write_kind_text_formats_skips_allow_dns_sinkhole(tmp_path: Path) -> Non
     buckets = RuleBuckets(domains=frozenset({"+.safe.example.com", "exact.safe.example.com"}))
     _ = write_kind_text_formats(RuleKind.ALLOW, buckets, tmp_path)
 
-    assert not (tmp_path / "adrules_ultra_allow_dnsmasq.conf").exists()
-    assert not (tmp_path / "adrules_ultra_allow_smartdns.conf").exists()
-    adguard = (tmp_path / "adrules_ultra_allow_adguard.txt").read_text(encoding="utf-8").splitlines()
+    assert not (tmp_path / "hyper_adrules_allow_dnsmasq.conf").exists()
+    assert not (tmp_path / "hyper_adrules_allow_smartdns.conf").exists()
+    adguard = (tmp_path / "hyper_adrules_allow_adguard.txt").read_text(encoding="utf-8").splitlines()
     assert "@@||safe.example.com^" in adguard
     assert "@@exact.safe.example.com" in adguard
 
@@ -506,13 +506,13 @@ def test_write_kind_text_formats_keeps_empty_clash_ipcidr(tmp_path: Path) -> Non
 
     _ = write_kind_text_formats(RuleKind.MALWARE, buckets, tmp_path)
 
-    empty_ip = (tmp_path / "adrules_ultra_malware_clash_ipcidr.yaml").read_text(encoding="utf-8")
+    empty_ip = (tmp_path / "hyper_adrules_malware_clash_ipcidr.yaml").read_text(encoding="utf-8")
     assert "(ipcidr)" in empty_ip
     assert "payload:" in empty_ip
     assert "[]" in empty_ip
     assert "- " not in empty_ip
-    assert (tmp_path / "adrules_ultra_malware_ipcidr.txt").read_text(encoding="utf-8").startswith("#")
-    assert (tmp_path / "adrules_ultra_malware_clash.yaml").is_file()
+    assert (tmp_path / "hyper_adrules_malware_ipcidr.txt").read_text(encoding="utf-8").startswith("#")
+    assert (tmp_path / "hyper_adrules_malware_clash.yaml").is_file()
 
 
 def test_write_outputs_emits_multi_format_files(tmp_path: Path) -> None:
@@ -558,14 +558,14 @@ def test_write_outputs_emits_multi_format_files(tmp_path: Path) -> None:
     out = tmp_path / "dist"
     write_outputs(result, out)
 
-    ads_txt = (out / "adrules_ultra_ads.txt").read_text(encoding="utf-8").splitlines()
+    ads_txt = (out / "hyper_adrules_ads.txt").read_text(encoding="utf-8").splitlines()
     assert ".subonly.example.com" in ads_txt
     assert "+.subonly.example.com" not in ads_txt
-    assert (out / "adrules_ultra_ads_singbox.json").is_file()
-    assert (out / "adrules_ultra_ads_clash.yaml").is_file()
-    assert (out / "adrules_ultra_ads_clash_ipcidr.yaml").is_file()
-    assert (out / "adrules_ultra_ads_dnsmasq.conf").is_file()
-    assert not (out / "adrules_ultra_allow_dnsmasq.conf").exists()
+    assert (out / "hyper_adrules_ads_singbox.json").is_file()
+    assert (out / "hyper_adrules_ads_clash.yaml").is_file()
+    assert (out / "hyper_adrules_ads_clash_ipcidr.yaml").is_file()
+    assert (out / "hyper_adrules_ads_dnsmasq.conf").is_file()
+    assert not (out / "hyper_adrules_allow_dnsmasq.conf").exists()
     assert "sing-box" in (out / "manifest.md").read_text(encoding="utf-8")
 
 
@@ -618,16 +618,16 @@ def test_dns_safe_build_does_not_contain_claude_apex(tmp_path: Path) -> None:
 
     forbidden_tokens = ("+.claude.ai", "||claude.ai^", "DOMAIN-SUFFIX,claude.ai", "address=/claude.ai/")
     ads_text_files = (
-        "adrules_ultra_ads.txt",
-        "adrules_ultra_ads_clash.yaml",
-        "adrules_ultra_ads_domains.txt",
-        "adrules_ultra_ads_surge.txt",
-        "adrules_ultra_ads_surge2.txt",
-        "adrules_ultra_ads_dnsmasq.conf",
-        "adrules_ultra_ads_smartdns.conf",
-        "adrules_ultra_ads_adguard.txt",
-        "adrules_ultra_ads_easylist.txt",
-        "adrules_ultra_ads_singbox.json",
+        "hyper_adrules_ads.txt",
+        "hyper_adrules_ads_clash.yaml",
+        "hyper_adrules_ads_domains.txt",
+        "hyper_adrules_ads_surge.txt",
+        "hyper_adrules_ads_surge2.txt",
+        "hyper_adrules_ads_dnsmasq.conf",
+        "hyper_adrules_ads_smartdns.conf",
+        "hyper_adrules_ads_adguard.txt",
+        "hyper_adrules_ads_easylist.txt",
+        "hyper_adrules_ads_singbox.json",
     )
     for relative_name in ads_text_files:
         content = (out / relative_name).read_text(encoding="utf-8")

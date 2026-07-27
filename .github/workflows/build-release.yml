@@ -110,10 +110,10 @@ jobs:
       - name: Convert to MRS and SRS
         run: |
           set -euo pipefail
-          for file in dist/adrules_ultra_ads.txt dist/adrules_ultra_allow.txt dist/adrules_ultra_malware.txt; do
+          for file in dist/hyper_adrules_ads.txt dist/hyper_adrules_allow.txt dist/hyper_adrules_malware.txt; do
             /tmp/mihomo convert-ruleset domain text "$file" "${file%.txt}.mrs"
           done
-          for file in dist/adrules_ultra_ads_ipcidr.txt dist/adrules_ultra_allow_ipcidr.txt dist/adrules_ultra_malware_ipcidr.txt; do
+          for file in dist/hyper_adrules_ads_ipcidr.txt dist/hyper_adrules_allow_ipcidr.txt dist/hyper_adrules_malware_ipcidr.txt; do
             mrs="${file%.txt}.mrs"
             # mihomo 对 0 条规则 panic; 空集写已验证空 MRS, 保证 URL 永不 404。
             set +e
@@ -128,7 +128,7 @@ jobs:
               exit "$status"
             fi
           done
-          for file in dist/adrules_ultra_ads_singbox.json dist/adrules_ultra_allow_singbox.json dist/adrules_ultra_malware_singbox.json; do
+          for file in dist/hyper_adrules_ads_singbox.json dist/hyper_adrules_allow_singbox.json dist/hyper_adrules_malware_singbox.json; do
             /tmp/sing-box rule-set compile --output "${file%.json}.srs" "$file"
           done
           # 用本次下载的 mihomo 加载全部 domain/ipcidr MRS, 防止空集静态 blob 与内核格式漂移。
