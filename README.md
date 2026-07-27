@@ -39,15 +39,14 @@
 
 ## 这是什么
 
-**HyperADRules** 已全面升级为自动化规则转换流水线：
+**HyperADRules** 是广告与恶意域名规则聚合项目：
 
 - 定时拉取多个 DNS 级上游，合并去重
 - **保守语义**：路径 / 端口 / 无法表达的 modifier **跳过**，绝不静默扩大为整域误杀
 - 一次构建，输出 **mihomo MRS / sing-box SRS / Clash / Surge / dnsmasq / SmartDNS / AdGuard** 等格式
 - 空 `ipcidr` 集合也会发布合法空资产，订阅 URL **不会 404**
 
-> 旧版仓库里的 `rules.txt` / `dns.txt` / `allow.txt` 静态大文件方案已退役。请改用下方 **Release 订阅**。  
-> 无需兼容旧订阅链接；请按本文档重新配置。
+请通过下方 **Release 订阅** 使用规则产物。
 
 ### 上游来源
 
@@ -239,7 +238,3 @@ sing-box rule-set compile --output dist/adrules_ultra_ads_singbox.srs dist/adrul
 ## 反馈
 
 误杀 / 漏拦欢迎开 Issue。规则会定期从上游重建；本仓库只做**保守、可追溯**的格式转换与发布。
-
-<div align="center">
-  <sub>Logo 沿用 HyperADRules 经典头图 · 由自动化转换引擎驱动</sub>
-</div>
