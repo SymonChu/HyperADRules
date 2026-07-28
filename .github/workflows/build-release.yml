@@ -224,7 +224,6 @@ jobs:
             dist/*.json
             dist/*.conf
             dist/manifest.md
-            dist/stats.json
             dist/SHA256SUMS
           make_latest: true
           # 同 content fingerprint 已完整则跳过; 残缺 release 会先删除再建, 不覆盖 assets。
