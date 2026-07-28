@@ -56,6 +56,7 @@
 | [anti-AD](https://github.com/privacy-protection-tools/anti-AD) | Clash payload 广告域 + 例外 |
 | [dead-horse whitelist](https://raw.githubusercontent.com/privacy-protection-tools/dead-horse/master/anti-ad-white-for-clash.yaml) | 并入 allow |
 | [Coolapk 1007 reward](https://raw.githubusercontent.com/lingeringsound/10007/main/reward) | 补充 ads hosts |
+| `sources/local_allow.txt` | 仓库本地白名单，覆盖上游误杀业务域 |
 
 ---
 
@@ -217,6 +218,7 @@ uv run python -m scripts.build_rulesets \
   --adguard-source upstream-adguard \
   --anti-ad-source upstream-anti-ad \
   --coolapk-1007-reward-source upstream-coolapk-1007-reward.txt \
+  --local-allow-source sources/local_allow.txt \
   --output dist \
   --adguard-commit "$(git -C upstream-adguard rev-parse HEAD)" \
   --anti-ad-commit "$(git -C upstream-anti-ad rev-parse HEAD)" \

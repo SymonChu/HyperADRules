@@ -18,6 +18,12 @@ from scripts.ruleset_types import (
 )
 
 
+def empty_local_allow(tmp_path: Path) -> Path:
+    path = tmp_path / "local_allow.txt"
+    _ = path.write_text("# empty local allow\n", encoding="utf-8")
+    return path
+
+
 def test_parse_domain_block_rule_when_adguard_suffix_rule() -> None:
     collectors = {kind: RuleCollector() for kind in RuleKind}
     stats = {kind: ConversionStats() for kind in RuleKind}
@@ -282,6 +288,7 @@ def test_convert_repositories_when_multiple_upstreams_have_rules(tmp_path: Path)
             UpstreamKind.DEAD_HORSE: "dead-horse-sha256",
             UpstreamKind.COOLAPK_1007_REWARD: "reward-sha256",
         },
+        local_allow_source=empty_local_allow(tmp_path),
     )
 
     assert result.buckets[RuleKind.ADS].domains == {
@@ -554,6 +561,7 @@ def test_write_outputs_emits_multi_format_files(tmp_path: Path) -> None:
             UpstreamKind.DEAD_HORSE: "dead-horse-sha256",
             UpstreamKind.COOLAPK_1007_REWARD: "reward-sha256",
         },
+        local_allow_source=empty_local_allow(tmp_path),
     )
     out = tmp_path / "dist"
     write_outputs(result, out)
@@ -608,6 +616,7 @@ def test_dns_safe_build_does_not_contain_claude_apex(tmp_path: Path) -> None:
             UpstreamKind.DEAD_HORSE: "dead-horse-sha256",
             UpstreamKind.COOLAPK_1007_REWARD: "reward-sha256",
         },
+        local_allow_source=empty_local_allow(tmp_path),
     )
     out = tmp_path / "dist"
     write_outputs(result, out)
@@ -633,3 +642,73 @@ def test_dns_safe_build_does_not_contain_claude_apex(tmp_path: Path) -> None:
         content = (out / relative_name).read_text(encoding="utf-8")
         assert all(token not in content for token in forbidden_tokens)
         assert "claude.ai" not in content
+
+def test_local_allow_covers_volces_business_domain(tmp_path: Path) -> None:
+    """Issue #24: keep ads +.volces.com while allowlisting business hosts."""
+    adguard_source = tmp_path / "adguard"
+    anti_ad_source = tmp_path / "anti-ad"
+    reward_source = tmp_path / "reward.txt"
+    local_allow = tmp_path / "local_allow.txt"
+    filters_dir = adguard_source / "Adguardhome" / "bin" / "data" / "filters"
+    filters_dir.mkdir(parents=True)
+    (adguard_source / "Adguardhome" / "bin").mkdir(exist_ok=True)
+    _ = (filters_dir / "1721861846.txt").write_text("||ads.example.com^\n", encoding="utf-8")
+    _ = (filters_dir / "1735560833.txt").write_text("||bad.example.com^\n", encoding="utf-8")
+    _ = (filters_dir / "1721861844.txt").write_text("@@||safe.example.com^\n", encoding="utf-8")
+    # Magisk user_rules 整域拦截 volces.com, 同时含拼写错误的 Kimi 例外。
+    _ = (adguard_source / "Adguardhome" / "bin" / "AdGuardHome.yaml").write_text(
+        (
+            "user_rules:\n"
+            "  - '||volces.com^$important'\n"
+            "  - '@@||prod-chat-kimi.tos-cn-beijing.volces.com^$importat'\n"
+        ),
+        encoding="utf-8",
+    )
+    anti_ad_source.mkdir()
+    _ = (anti_ad_source / "anti-ad-adguard.txt").write_text("@@||anti-safe.example.com^\n", encoding="utf-8")
+    _ = (anti_ad_source / "anti-ad-clash.yaml").write_text(
+        "payload:\n  - '+.mssdk.volces.com'\n",
+        encoding="utf-8",
+    )
+    _ = (anti_ad_source / "anti-ad-white-for-clash.yaml").write_text(
+        "payload:\n  - '+.anti-white.example.com'\n",
+        encoding="utf-8",
+    )
+    _ = reward_source.write_text("0.0.0.0 reward.example.com\n", encoding="utf-8")
+    _ = local_allow.write_text(
+        (
+            "@@||ark.cn-beijing.volces.com^\n"
+            "@@||prod-chat-kimi.tos-cn-beijing.volces.com^\n"
+        ),
+        encoding="utf-8",
+    )
+
+    result = convert_repositories(
+        adguard_source,
+        anti_ad_source,
+        reward_source,
+        {
+            UpstreamKind.ADGUARD_MAGISK: "adguard-sha",
+            UpstreamKind.ANTI_AD: "anti-sha",
+            UpstreamKind.DEAD_HORSE: "dead-horse-sha256",
+            UpstreamKind.COOLAPK_1007_REWARD: "reward-sha256",
+        },
+        local_allow_source=local_allow,
+    )
+    out = tmp_path / "dist"
+    write_outputs(result, out)
+
+    # ads 仍保留整域拦截与已知广告子域, 不在转换阶段删除。
+    assert "+.volces.com" in result.buckets[RuleKind.ADS].domains
+    assert "+.mssdk.volces.com" in result.buckets[RuleKind.ADS].domains
+    # allow 新增方舟业务域与修正后的 Kimi 例外。
+    assert "+.ark.cn-beijing.volces.com" in result.buckets[RuleKind.ALLOW].domains
+    assert "+.prod-chat-kimi.tos-cn-beijing.volces.com" in result.buckets[RuleKind.ALLOW].domains
+    # 上游 $importat 拼写错误仍被跳过; 白名单来自 local_allow。
+    assert result.stats[RuleKind.ALLOW].unsupported_modifier >= 1
+
+    allow_txt = (out / "hyper_adrules_allow.txt").read_text(encoding="utf-8")
+    ads_txt = (out / "hyper_adrules_ads.txt").read_text(encoding="utf-8")
+    assert "+.ark.cn-beijing.volces.com" in allow_txt.splitlines()
+    assert "+.volces.com" in ads_txt.splitlines()
+

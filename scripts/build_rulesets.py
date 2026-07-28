@@ -21,6 +21,7 @@ class BuildArgs:
     adguard_source: Path
     anti_ad_source: Path
     coolapk_1007_reward_source: Path
+    local_allow_source: Path
     output: Path
     adguard_commit: str
     anti_ad_commit: str
@@ -33,6 +34,12 @@ def parse_args(argv: Sequence[str]) -> BuildArgs:
     _ = parser.add_argument("--adguard-source", type=Path, required=True)
     _ = parser.add_argument("--anti-ad-source", type=Path, required=True)
     _ = parser.add_argument("--coolapk-1007-reward-source", type=Path, required=True)
+    _ = parser.add_argument(
+        "--local-allow-source",
+        type=Path,
+        default=Path("sources/local_allow.txt"),
+        help="repo-local AdGuard exception rules merged into allow",
+    )
     _ = parser.add_argument("--output", type=Path, required=True)
     _ = parser.add_argument("--adguard-commit", default="unknown")
     _ = parser.add_argument("--anti-ad-commit", default="unknown")
@@ -43,6 +50,7 @@ def parse_args(argv: Sequence[str]) -> BuildArgs:
     adguard_source = parsed["adguard_source"]
     anti_ad_source = parsed["anti_ad_source"]
     coolapk_1007_reward_source = parsed["coolapk_1007_reward_source"]
+    local_allow_source = parsed["local_allow_source"]
     output = parsed["output"]
     adguard_commit = parsed["adguard_commit"]
     anti_ad_commit = parsed["anti_ad_commit"]
@@ -53,6 +61,8 @@ def parse_args(argv: Sequence[str]) -> BuildArgs:
     if not isinstance(anti_ad_source, Path):
         raise TypeError
     if not isinstance(coolapk_1007_reward_source, Path):
+        raise TypeError
+    if not isinstance(local_allow_source, Path):
         raise TypeError
     if not isinstance(output, Path):
         raise TypeError
@@ -68,6 +78,7 @@ def parse_args(argv: Sequence[str]) -> BuildArgs:
         adguard_source=adguard_source,
         anti_ad_source=anti_ad_source,
         coolapk_1007_reward_source=coolapk_1007_reward_source,
+        local_allow_source=local_allow_source,
         output=output,
         adguard_commit=adguard_commit,
         anti_ad_commit=anti_ad_commit,
@@ -88,6 +99,7 @@ def main() -> int:
             UpstreamKind.DEAD_HORSE: args.dead_horse_commit,
             UpstreamKind.COOLAPK_1007_REWARD: args.coolapk_1007_reward_commit,
         },
+        local_allow_source=args.local_allow_source,
     )
     write_outputs(result, args.output)
     print_summary(result)

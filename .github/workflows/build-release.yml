@@ -56,6 +56,7 @@ jobs:
             --adguard-source upstream-adguard \
             --anti-ad-source upstream-anti-ad \
             --coolapk-1007-reward-source upstream-coolapk-1007-reward.txt \
+            --local-allow-source sources/local_allow.txt \
             --output dist \
             --adguard-commit "$ADGUARD_SHA" \
             --anti-ad-commit "$ANTI_AD_SHA" \
