@@ -644,7 +644,7 @@ def test_dns_safe_build_does_not_contain_claude_apex(tmp_path: Path) -> None:
         assert "claude.ai" not in content
 
 def test_local_allow_covers_volces_business_domain(tmp_path: Path) -> None:
-    """issue #24: 上游整域 ||volces.com 仍在 ads; 本地白名单把业务域放进 allow。"""
+    """Issue #24: keep ads +.volces.com while allowlisting business hosts."""
     adguard_source = tmp_path / "adguard"
     anti_ad_source = tmp_path / "anti-ad"
     reward_source = tmp_path / "reward.txt"
@@ -657,9 +657,11 @@ def test_local_allow_covers_volces_business_domain(tmp_path: Path) -> None:
     _ = (filters_dir / "1721861844.txt").write_text("@@||safe.example.com^\n", encoding="utf-8")
     # Magisk user_rules 整域拦截 volces.com, 同时含拼写错误的 Kimi 例外。
     _ = (adguard_source / "Adguardhome" / "bin" / "AdGuardHome.yaml").write_text(
-        "user_rules:\n"
-        "  - '||volces.com^$important'\n"
-        "  - '@@||prod-chat-kimi.tos-cn-beijing.volces.com^$importat'\n",
+        (
+            "user_rules:\n"
+            "  - '||volces.com^$important'\n"
+            "  - '@@||prod-chat-kimi.tos-cn-beijing.volces.com^$importat'\n"
+        ),
         encoding="utf-8",
     )
     anti_ad_source.mkdir()
@@ -674,8 +676,10 @@ def test_local_allow_covers_volces_business_domain(tmp_path: Path) -> None:
     )
     _ = reward_source.write_text("0.0.0.0 reward.example.com\n", encoding="utf-8")
     _ = local_allow.write_text(
-        "@@||ark.cn-beijing.volces.com^\n"
-        "@@||prod-chat-kimi.tos-cn-beijing.volces.com^\n",
+        (
+            "@@||ark.cn-beijing.volces.com^\n"
+            "@@||prod-chat-kimi.tos-cn-beijing.volces.com^\n"
+        ),
         encoding="utf-8",
     )
 
