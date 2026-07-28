@@ -23,6 +23,8 @@ def convert_repositories(
     anti_ad_source_dir: Path,
     coolapk_1007_reward_source: Path,
     upstream_commits: dict[UpstreamKind, str],
+    *,
+    local_allow_source: Path,
 ) -> ConversionResult:
     collectors: dict[RuleKind, RuleCollector] = {kind: RuleCollector() for kind in RuleKind}
     stats: dict[RuleKind, ConversionStats] = {kind: ConversionStats() for kind in RuleKind}
@@ -30,6 +32,8 @@ def convert_repositories(
     parse_adguard_magisk(adguard_source_dir, collectors, stats)
     parse_anti_ad(anti_ad_source_dir, collectors, stats)
     parse_coolapk_1007_reward(coolapk_1007_reward_source, collectors, stats)
+    # 本地白名单并入 allow; 不从 ads 删除上游条目, 客户端靠 allow/PASS 优先。
+    parse_local_allow(local_allow_source, collectors, stats)
 
     return ConversionResult(
         buckets={kind: collector.freeze() for kind, collector in collectors.items()},
@@ -67,6 +71,15 @@ def parse_coolapk_1007_reward(
     stats: dict[RuleKind, ConversionStats],
 ) -> None:
     parse_file(source_path, RuleKind.ADS, collectors, stats)
+
+
+def parse_local_allow(
+    source_path: Path,
+    collectors: dict[RuleKind, RuleCollector],
+    stats: dict[RuleKind, ConversionStats],
+) -> None:
+    # 仅接受 @@ 例外; 拦截规则不得经本地白名单文件混入 allow。
+    parse_file(source_path, RuleKind.ALLOW, collectors, stats, exceptions_only=True)
 
 def parse_file(
     path: Path,
@@ -195,6 +208,7 @@ def write_manifest(result: ConversionResult, path: Path) -> None:
         f"- anti-AD: `{result.upstream_commits[UpstreamKind.ANTI_AD]}`",
         f"- dead-horse: `{result.upstream_commits[UpstreamKind.DEAD_HORSE]}`",
         f"- Coolapk 1007 reward: `{result.upstream_commits[UpstreamKind.COOLAPK_1007_REWARD]}`",
+        "- local allow: `sources/local_allow.txt`",
         "",
         "- 产物语义: 多上游 DNS 广告规则到多种客户端格式的保守转换。",
         f"- 例外规则已拆为 `{OUTPUT_PREFIX}_allow.*`, mihomo 建议在 `sub-rules` 中用 `PASS`。",
