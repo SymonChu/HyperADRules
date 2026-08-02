@@ -1,0 +1,8 @@
+# HyperADRules 本地白名单（AdGuard 语法）
+# 用于覆盖上游误杀的业务域名；转换时写入 allow 集合，mihomo 建议 PASS。
+#
+# issue #24: Magisk user_rules 含 ||volces.com^$important，整域拦截火山引擎业务域
+# https://github.com/Lynricsy/HyperADRules/issues/24
+@@||ark.cn-beijing.volces.com^
+# 上游 Kimi 例外写成 $importat 会被跳过，这里补正
+@@||prod-chat-kimi.tos-cn-beijing.volces.com^
